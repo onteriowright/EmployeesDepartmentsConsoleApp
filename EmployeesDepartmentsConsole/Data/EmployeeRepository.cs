@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using EmployeesDepartmentsConsole.Models;
 
 namespace EmployeesDepartmentsConsole.Data
@@ -172,6 +172,69 @@ namespace EmployeesDepartmentsConsole.Data
             }
         }
 
+        public List<Employee> GetAllEmployeesWithDepartment()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                         SELECT e.Id, e.firstName, e.lastName, e.departmentId, d.deptName as 'Department Name'
+                        FROM Employee e 
+                        LEFT JOIN Department d
+                        ON e.departmentId = d.Id";
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    var allDepartmentEmployees = new List<Employee>();
+
+                    Employee employee = null;
+
+                    // If we only expect a single row back from the database, we don't need a while loop.
+                    while (reader.Read())
+
+                    {
+                        int idColumnPosition = reader.GetOrdinal("Id");
+                        int IdValue = reader.GetInt32(idColumnPosition);
+
+                        int firstNameColumnPosition = reader.GetOrdinal("firstName");
+                        string firstNameValue = reader.GetString(firstNameColumnPosition);
+
+                        int lastNameColumnPosition = reader.GetOrdinal("lastName");
+                        string lastNameValue = reader.GetString(lastNameColumnPosition);
+
+                        int departmentColumnPosition = reader.GetOrdinal("Department Name");
+                        string departmentValue = reader.GetString(departmentColumnPosition);
+
+                        int departmentIdColumnPosition = reader.GetOrdinal("departmentId");
+                        int departmentIdValue = reader.GetInt32(departmentIdColumnPosition);
+
+                        employee = new Employee
+                        {
+                            Id = IdValue,
+                            FirstName = firstNameValue,
+                            LastName = lastNameValue,
+                            DepartmentId = departmentIdValue,
+                            Department = new Department
+                            {
+                                DeptName = departmentValue,
+                                Id = departmentIdValue
+                            }
+
+                        };
+
+                        allDepartmentEmployees.Add(employee);
+
+
+                    }
+
+                    reader.Close();
+
+                    return allDepartmentEmployees;
+                }
+            }
+        }
 
         // Create a new employee
         public Employee CreateNewEmployee(Employee employeeToAdd)
