@@ -24,7 +24,7 @@ namespace EmployeesDepartmentsConsole
                 Console.WriteLine("4. Delete department by Id");
                 Console.WriteLine("5. Show all employees in database");
                 Console.WriteLine("6. Show specific employee by Id");
-                Console.WriteLine("7. Show all employees by department");
+                Console.WriteLine("7. Show all employees and department");
                 Console.WriteLine("8. Create a new employee");
                 Console.WriteLine("9. Delete employee by Id");
                 Console.WriteLine("10. Exit");
