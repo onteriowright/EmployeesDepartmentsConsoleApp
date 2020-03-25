@@ -56,12 +56,8 @@ namespace EmployeesDepartmentsConsole
                     Console.Write("Enter Department ID and press return key: ");
 
                     var departmentId = int.Parse(Console.ReadLine());
-                    Console.WriteLine();
-
-                    Console.WriteLine($"Getting department with ID: {departmentId}");
 
                     var individualDepartment = departmentRepo.GetDepartmentById(departmentId);
-
 
                     Console.WriteLine();
                     Console.Write($"Found department associated with that ID: ");
